@@ -1,4 +1,4 @@
-# some-name
+# nova-host
 a clearnet app for urbiters that allows users to sign in with their onchain Urbit ID, to message onchain in obfuscated group messaging playing on the idea of collective intelligence finding consensus. 
 
 [Example Demo](https://www.loom.com/share/b84518357ca24188b858a4abe2703418)
@@ -13,9 +13,11 @@ use of sequence embedded wallet sign in with playfab to pass securely an onchain
 - message authors get grouped by random group of chat particpation, so an onchain author can have 1-N authors, and this index is stored securely in a cloudflare worker KV storage
 - session tickets pool over a signed in session to decide on group
 - limit chat size to 257, limit group based on moderator
+- gas obscurity -> less gas on network, more obfuscated onchain
+- user considered "is online" to be included in sessions -> work in progress numbers: 70% recency of time on chain (less max of 30 days) vs. 30% of total supply minted in chat to be included in others
 
-### 3. Native eth on base
-- use b3.fun to scale and pay for first group of users, so storage -> price is native to markets and available
+### 3. Native eth on arbitrum nova
+- use arbitrum nova to scale and pay for first group of users, so storage -> price is native to markets and available
 
 ### 4. Reputation weighting voting
 - high impact (80%) - feedback loop into pooled message grouping and tied in from group emojis
