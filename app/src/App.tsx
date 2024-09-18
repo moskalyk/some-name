@@ -7,6 +7,7 @@ import {ethers} from 'ethers'
 import sequence from './SequenceEmbeddedWallet'
 import { useOpenConnectModal } from '@0xsequence/kit'
 import { useDisconnect, useAccount } from 'wagmi'
+import EmojiPicker from 'emoji-picker-react';
 
 // @ts-ignore
 import ob from 'urbit-ob'
@@ -27,9 +28,85 @@ const Sigil = ({ config }: any) => {
   )
  }
 
+
+const YourComponent = (props: any) => {
+  const [scrollAmount, setScrollAmount] = useState(0); // Initial slow scroll amount
+  const [emojis, setEmojis] = useState<any>(null);
+
+  useEffect(() => {
+    if (scrollAmount && props.emoji) {
+      // When scrollAmount changes, update the emojis with the marquee
+      setEmojis(
+        <marquee
+          style={{ height: "50px" }}
+          direction="down"
+          scrollAmount={scrollAmount} // Proper camelCase for JSX
+        >
+          {props.emoji}<span style={{fontSize: '10px'}}>x2</span>
+        </marquee>
+      );
+    } 
+    else {
+      setEmojis(null);
+    }
+  }, [scrollAmount]);
+
+  return (
+    <div
+      className="marquee-container"
+      style={{height: '50px', width: '100px'}}
+      onMouseEnter={() => setScrollAmount(2)} // Faster scroll on hover
+      onMouseLeave={() => setScrollAmount(0)} // Stop scrolling when mouse leaves
+    >
+      {emojis}
+    </div>
+  );
+};
+
+
 const Chat = (props: any) => {
   const chatContainerRef: any = useRef(null);
-  // const [] = useState(null)
+  const [emojiPickerMessageId, setEmojiPickerMessageId] = useState(null); // Track which message is getting the emoji picker
+  const [messages, setMessages] = useState([
+    { text: '☆ ☆ ☆ Welcome ☆ ☆ ☆', id: 1, isUser: false, emoji: null },
+  ]);
+  const [newMessage, setNewMessage] = useState('');
+  const textareaRef: any = useRef(null);
+
+  const handleSend = () => {
+    if (newMessage.trim() !== '') {
+      const newId = messages.length + 1;
+      setMessages([...messages, { text: newMessage, id: newId, isUser: true, emoji: null }]);
+      setNewMessage('');
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `10px`;
+    }
+  };
+
+  const handleKeyPress = (e: any) => {
+    if (e.key === 'Enter') {
+      handleSend();
+    }
+  };
+
+  const handleInputChange = (e: any) => {
+    setNewMessage(e.target.value);
+    textareaRef.current.style.height = 'auto';
+    textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+  };
+
+  const handleEmojiClick = async (emoji: any) => {
+    if (emojiPickerMessageId !== null) {
+      // Update the emoji for the specific message
+      setMessages((prevMessages) =>
+        prevMessages.map((message) =>
+          message.id === emojiPickerMessageId ? { ...message, emoji: emoji.emoji } : message
+        )
+      );
+      setEmojiPickerMessageId(null); // Close the emoji picker
+    }
+  };
+
   useEffect(() => {
 
     // Connect to the Ethereum mainnet
@@ -74,7 +151,7 @@ const Chat = (props: any) => {
           console.log(`Urbit ID for point ${point}: ${urbitId}`);
           props.setSigil(urbitId)
           // fetch('', {})
-          const res = await fetch('http://localhost:3001/sessionTicket', {
+          const res = await fetch('http://localhost:3005/sessionTicket', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -104,34 +181,6 @@ const Chat = (props: any) => {
     findUrbitId(addressToCheck);
     
   }, [])
-  const textareaRef: any = useRef(null);
-  const [messages, setMessages] = useState([
-    { text: '☆ ☆ ☆ Welcome ☆ ☆ ☆', id: 1, isUser: false },
-  ]);
-  const [newMessage, setNewMessage] = useState('');
-
-  const handleSend = () => {
-    if (newMessage.trim() !== '') {
-      const newId = messages.length + 1;
-      setMessages([...messages, { text: newMessage, id: newId, isUser: true }]);
-      setNewMessage('');
-    textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `10px`;
-    }
-  };
-
-  const handleKeyPress = (e: any) => {
-    if (e.key === 'Enter') {
-      handleSend();
-    }
-  };
-
-  const handleInputChange = (e: any) => {
-    setNewMessage(e.target.value);
-    // Adjust the height of the textarea
-    textareaRef.current.style.height = 'auto';
-    textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-  };
 
   useEffect(() => {
     // Scroll to the bottom whenever messages are updated
@@ -141,46 +190,52 @@ const Chat = (props: any) => {
   }, [messages]);
 
   return (
-    <div className="chat-container" >
+    <div className="chat-container">
       <div className='messages-container' ref={chatContainerRef}>
-
-      {messages.map((message) => (
-        <div
-          key={message.id}
-          className={`message-container ${message.isUser ? 'user' : 'other'}`}
-        >
-          {!message.isUser && 
-          <>
-
-          <div className='avatar'>
-            <Sigil config={config}/>
+        {messages.map((message) => (
+          <div
+            key={message.id}
+            className={`message-container ${message.isUser ? 'user' : 'other'}`}
+          >
+            {!message.isUser && (
+              <>
+                <div className='avatar'>
+                  <Sigil config={config} />
+                </div>
+                <div className={`message-bubble ${message.isUser ? 'user-bubble' : 'other-bubble'}`}>
+                  <span className="message-point-user">{config.point}</span>
+                  {message.text}
+                </div>
+              </>
+            )}
+            {message.isUser && (
+              <>
+                <div className='avatar'>
+                  <Sigil config={{ ...config, point: props.sigil }} />
+                </div>
+                <div
+                  onClick={() => setEmojiPickerMessageId(message.id)} // Set message ID to show EmojiPicker
+                  className={`message-bubble ${message.isUser ? 'user-bubble' : 'other-bubble'}`}
+                >
+                  <span className="message-point">{props.sigil}</span>
+                  {message.text}
+                </div>
+                <br />
+                <YourComponent emoji={message.emoji} />
+              </>
+            )}
           </div>
-          
-          <div className={`message-bubble ${message.isUser ? 'user-bubble' : 'other-bubble'}`}>
-          <span className="message-point-user">{config.point}</span>
-            {message.text}
-          </div>
-          </>
-          }
-          {message.isUser && 
-          <>
-<div className='avatar'>
-<Sigil config={{...config, point: props.sigil}}/>
-          </div>
-          <div className={`message-bubble ${message.isUser ? 'user-bubble' : 'other-bubble'}`}>
-          <span className="message-point">{props.sigil}</span>
-          
-            {message.text}
-          </div>
-          </>
-            
-          }
-        </div>
-      ))}
+        ))}
       </div>
 
+      {emojiPickerMessageId && (
+        <div className="emoji-picker-overlay">
+          <EmojiPicker onEmojiClick={handleEmojiClick} /> {/* Handle emoji click */}
+        </div>
+      )}
+
       <div className="input-container">
-      <textarea
+        <textarea
           ref={textareaRef}
           value={newMessage}
           onChange={handleInputChange}
