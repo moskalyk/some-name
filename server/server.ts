@@ -9,7 +9,7 @@ import PlayFabClient from "playfab-sdk/Scripts/PlayFab/PlayFabClient.js";
 import express from 'express'
 import cors from 'cors'
 
-const PORT = 3001
+const PORT = 3005
 const app = express()
 
 const corsOptions = {
