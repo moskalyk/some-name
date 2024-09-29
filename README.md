@@ -1,5 +1,5 @@
 # nova-host
-a clearnet app for urbiters that allows users to sign in with their onchain Urbit ID, to message onchain in obfuscated group messaging playing on the idea of collective intelligence finding consensus. 
+a clearnet app for urbiters that allows users to sign in with their onchain Urbit ID, to message on-usb in obfuscated group messaging playing on the idea of collective intelligence finding consensus. 
 
 [Example Demo](https://www.loom.com/share/b84518357ca24188b858a4abe2703418)
 
@@ -9,19 +9,10 @@ a clearnet app for urbiters that allows users to sign in with their onchain Urbi
 use of sequence embedded wallet sign in with playfab to pass securely an onchain Urbit ID as a user account to generate a session ticket
 
 ### 2. Pooled messsaging obfuscation
-- mint an nft to have entrance to a chat
-- message authors get grouped by random group of chat particpation, so an onchain author can have 1-N authors, and this index is stored securely in a cloudflare worker KV storage
-- session tickets pool over a signed in session to decide on group
-- limit chat size to 257, limit group based on moderator
+- buy an nft to have entrance to a chat
+- message authors get grouped by random group of chat participation, so an onchain author can have 1-6 authors, and this index is stored on user device
 - gas obscurity -> less gas on network, more obfuscated onchain
 - user considered "is online" to be included in sessions -> work in progress numbers: 70% recency of time on chain (less max of 30 days) vs. 30% of total supply minted in chat to be included in others
 
-### 3. Native eth on arbitrum nova
-- use arbitrum nova to scale and pay for first group of users, so storage -> price is native to markets and available
-
-### 4. Reputation weighting voting
-- high impact (80%) - feedback loop into pooled message grouping and tied in from group emojis
-- low impact (20%) - onchain price movements attached to message relativity. truth can emerge from a single message -> 'wartime ceos versus peacetime ceos'
-
-### 5. Mintable
-- messages can become mintable and stored in wallet, as takeaways after group has been dissolved
+### 3. Downloadable images
+- messages can be downloaded and stored in file system, as takeaways after group has been dissolved

@@ -12,8 +12,10 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "ethers": "^6.13.2",
     "express": "^4.19.2",
-    "playfab-sdk": "^2.160.240816"
+    "playfab-sdk": "^2.160.240816",
+    "urbit-ob": "^5.0.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
