@@ -1,8 +1,6 @@
 # nova-host
 a clearnet app for urbiters that allows users to sign in with their onchain Urbit ID, to message on-usb in obfuscated group messaging playing on the idea of collective intelligence finding consensus. 
 
-[Example Demo](https://www.loom.com/share/b84518357ca24188b858a4abe2703418)
-
 ## core concepts
 
 ### 1. Embedded wallet sign in
